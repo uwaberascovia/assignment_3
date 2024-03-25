@@ -1,9 +1,11 @@
+import 'package:assignment_3/add_quiz.dart';
 import 'package:flutter/material.dart';
 import 'package:assignment_3/calc.dart';
 import 'package:assignment_3/contact.dart';
 import 'package:assignment_3/contact_page.dart';
 import 'package:assignment_3/home.dart';
 import 'package:assignment_3/pages/sign_in.dart';
+import 'package:assignment_3/pages/quiz.dart';
 import 'package:assignment_3/settings.dart';
 import 'package:assignment_3/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -21,11 +23,29 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    // return Consumer<ThemeProvider>(builder: (context, provider, child) {
+    //   return MaterialApp(
+    //     theme: ThemeData.light(),
+    //     darkTheme: ThemeData.dark(),
+    //     themeMode: provider.themeMode,
+    //     debugShowCheckedModeBanner: false,
+    //     home: const Home(),
+    //   );
+    // });
     return Consumer<ThemeProvider>(builder: (context, provider, child) {
       return MaterialApp(
-        theme: ThemeData.light(),
-        darkTheme: ThemeData.dark(),
-        themeMode: provider.themeMode,
+        theme: ThemeData(
+          // Customize the light theme
+          primarySwatch: Colors.lightBlue,
+          brightness: Brightness.light,
+        ),
+        darkTheme: ThemeData(
+          // Customize the dark theme
+          primaryColor: Colors.deepPurple[800],
+          brightness: Brightness.dark,
+        ),
+        themeMode: provider
+            .themeMode, // Use the themeMode from the provider to toggle themes
         debugShowCheckedModeBanner: false,
         home: const Home(),
       );
@@ -47,6 +67,7 @@ class _HomeState extends State<Home> {
     const HomePage(),
     CalculatorPage(),
     const ProfilePage(),
+    QuizPage(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -84,21 +105,17 @@ class _HomeState extends State<Home> {
               opacity: 100,
             )),
           ),
-          // const ListTile(
-          //   title: Text('Home'),
-          //   leading: Icon(Icons.home),
-          // ),
-          // const ListTile(
-          //   title: Text('Calculator'),
-          //   leading: Icon(Icons.calculate),
-          // ),
-          // const ListTile(
-          //   title: Text('Contacts'),
-          //   leading: Icon(Icons.person),
-          // ),
           buildDrawerItem(0, 'Home', Icons.home),
           buildDrawerItem(1, 'Calculator', Icons.calculate),
           buildDrawerItem(2, 'Contacts', Icons.person),
+          ListTile(
+            title: const Text('Quiz'),
+            leading: const Icon(Icons.assignment),
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => AddQuiz()));
+            },
+          ),
           ListTile(
             title: const Text('Settings'),
             leading: const Icon(Icons.settings),
@@ -130,6 +147,8 @@ class _HomeState extends State<Home> {
               icon: Icon(Icons.calculate), label: 'Calculator'),
           const NavigationDestination(
               icon: Icon(Icons.person), label: 'Contact'),
+          const NavigationDestination(
+              icon: Icon(Icons.assignment), label: 'Quiz'),
         ],
         onDestinationSelected: (int index) {
           setState(() {
